@@ -1,4 +1,4 @@
-import { DBCategory } from "./entities/category.entity"
+import { DBCategory } from './entities/category.entity'
 
 export interface Time {
   hour: number
