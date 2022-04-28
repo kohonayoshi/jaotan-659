@@ -21,7 +21,9 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "strictNullChecks": false,
     "baseUrl": ".",
     "newLine": "LF"
   },

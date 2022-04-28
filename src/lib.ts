@@ -1,6 +1,12 @@
 import { Time, TimeData, TIMES } from './times'
 
-export function getTodayDate(time: Time) {
+/**
+ * Time に対応する今日の日時を返す
+ *
+ * @param {Time} time 時間データ
+ * @returns {Date} 時間データに対応する今日の日時
+ */
+export function getTodayDate(time: Time): Date {
   const today = new Date()
   return new Date(
     today.getFullYear(),
@@ -19,7 +25,7 @@ export function getTodayDate(time: Time) {
  * @param text テキスト
  * @param date 投稿日時
  * @param isValid 有効時間のみ取得するか
- * @returns 時間データ
+ * @returns {TimeData | null} 時間データ (該当するものがない場合 null)
  */
 export function getTimeData(
   text: string,
@@ -68,6 +74,13 @@ export function getTimeData(
   return times.length > 0 ? result : null
 }
 
+/**
+ * 時間データと指定日時を比較し、差時間テキストを返す
+ *
+ * @param timeData 時間データ
+ * @param date 指定日時
+ * @returns {string} 差時間テキスト
+ */
 export function getTimeDiffText(timeData: TimeData, date: Date): string {
   const time = getTodayDate(timeData.base)
   const diff = Math.abs(date.getTime() - time.getTime())
