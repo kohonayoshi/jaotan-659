@@ -36,6 +36,7 @@ client.on('messageCreate', async (message: Message) => {
   // 有効期間外
   message.reply('有効期間外')
 })
+
 ;(async () => {
   console.log('Initializing database...')
   await AppDataSource.initialize().catch((error) => console.log(error))
