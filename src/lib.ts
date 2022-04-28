@@ -1,4 +1,4 @@
-import { Time, TimeData, TIMES } from './times'
+import { Time, TimeData } from './times'
 
 /**
  * Time に対応する今日の日時を返す
@@ -22,33 +22,35 @@ export function getTodayDate(time: Time): Date {
 /**
  * テキストから時間データを取得する
  *
+ * @param TIMES 時間データ群
  * @param text テキスト
  * @param date 投稿日時
  * @param isValid 有効時間のみ取得するか
  * @returns {TimeData | null} 時間データ (該当するものがない場合 null)
  */
 export function getTimeData(
+  TIMES: TimeData[],
   text: string,
   date: Date,
   isValid: boolean
 ): TimeData | null {
   const times = TIMES.filter((time) => {
     switch (time.type) {
-      case 'equal':
+      case 'EQUAL':
         return text === time.text
-      case 'start':
+      case 'START':
         return text.startsWith(time.text)
-      case 'end':
+      case 'END':
         return text.endsWith(time.text)
-      case 'include':
+      case 'INCLUDE':
         return text.includes(time.text)
       default:
         return false
     }
   }).filter((time) => {
     if (!isValid) return true
-    const before = time.before
-    const after = time.after
+    const before = time.start
+    const after = time.end
     return (
       before.hour <= date.getHours() &&
       date.getHours() <= after.hour &&

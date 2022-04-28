@@ -19,9 +19,9 @@ export class DBCategory {
 
   @Column({
     type: 'text',
-    comment: '生メッセージテキスト',
+    comment: 'テキスト',
   })
-  rawtext: string
+  text: string
 
   @Column({
     type: 'text',
@@ -43,19 +43,22 @@ export class DBCategory {
   matchType: 'EQUAL' | 'START' | 'END' | 'INCLUDE'
 
   @Column({
-    type: 'time',
+    type: 'varchar',
+    length: 12, // 00:00:00.000
     comment: '基準時刻',
   })
   base: string
 
   @Column({
-    type: 'time',
+    type: 'varchar',
+    length: 12, // 00:00:00.000
     comment: '対象開始日時',
   })
   start: string
 
   @Column({
-    type: 'time',
+    type: 'varchar',
+    length: 12, // 00:00:00.000
     comment: '対象終了日時',
   })
   end: string

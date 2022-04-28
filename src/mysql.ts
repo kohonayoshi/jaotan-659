@@ -1,10 +1,11 @@
+import { Message, User } from 'discord.js'
 import mysql from 'mysql2/promise'
-import { DataSource } from 'typeorm'
+import { DataSource, Repository, Timestamp } from 'typeorm'
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import configuration from './configuration'
 import { DBCategory } from './entities/category.entity'
 import { DBRecord } from './entities/record.entity'
 import { DBUser } from './entities/user.entity'
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 
 export const AppDataSource = new DataSource({
   type: configuration.DB_TYPE,
@@ -45,20 +46,42 @@ export async function getDBConnection(): Promise<mysql.Connection | null> {
   }
 }
 
-/*
 export async function addItem(
-  conn: mysql.Connection,
   message: Message,
-  timeData: TimeData
+  category: DBCategory,
+  diff: number
 ): Promise<void> {
   // データ追加
+  const user = new DBUser()
+  user.userId = Number(message.author.id)
+  user.username = message.author.username
+  user.discriminator = message.author.discriminator
+  user.avatarUrl = message.author.avatarURL()
+
+  const record = new DBRecord()
+  record.messageId = Number(message.id)
+  record.rawtext = message.content
+  record.category = category
+  record.user = user
+  record.diff = diff
+  record.postedAt = Timestamp.fromString(message.createdAt.toISOString())
 }
 
 export async function isTried(
-  conn: mysql.Connection,
   user: User,
-  timeData: TimeData
-): Promise<void> {
+  category: DBCategory,
+  dbRecordRepo: Repository<DBRecord>
+): Promise<boolean> {
   // 既にデータがあるかどうか、トライ済みか？
+  const dbRecord = await dbRecordRepo.findOne({
+    where: {
+      user: {
+        userId: Number(user.id),
+      },
+      category: {
+        categoryId: Number(category.categoryId),
+      },
+    },
+  })
+  return !!dbRecord
 }
-*/

@@ -33,9 +33,9 @@ export class DBUser {
 
   @Column({
     type: 'text',
-    comment: 'アバター情報',
+    comment: 'アバターURL',
   })
-  avatar: string
+  avatarUrl: string
 
   @CreateDateColumn({
     comment: 'データ登録日時',
