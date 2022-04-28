@@ -2,9 +2,10 @@ import { Client, Intents, Message } from 'discord.js'
 import 'reflect-metadata'
 import configuration from './configuration'
 import { DBCategory } from './entities/category.entity'
+import { DBRecord } from './entities/record.entity'
 import { getTimeData, getTimeDiffText } from './lib'
-import { AppDataSource } from './mysql'
-import { parseTime, TimeData } from './times'
+import { AppDataSource, isTried } from './mysql'
+import { getDateText, parseTime, TimeData } from './times'
 
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
@@ -25,20 +26,21 @@ client.on('messageCreate', async (message: Message) => {
   const timeData = getTimeData(TIMES, message.content, message.createdAt, true)
   if (timeData) {
     // 有効期間内
-    message.reply(getTimeDiffText(timeData, message.createdAt))
-    return
+    const dbRecordRepo = AppDataSource.getRepository(DBRecord)
+    if (!isTried(message.author, timeData.category, dbRecordRepo)) {
+      message.reply(getTimeDiffText(timeData, message.createdAt))
+    }
+    // 既にトライ済み
   }
 
-  const timeDataNotValid = getTimeData(
-    TIMES,
-    message.content,
-    message.createdAt,
-    false
-  )
-  if (!timeDataNotValid) return
-
   // 有効期間外
-  message.reply('有効期間外')
+  const reply = await message.reply(getDateText(message.createdAt))
+  setTimeout(() => {
+    reply
+      .delete()
+      .then(() => null)
+      .catch(() => null) // 30秒後に削除
+  }, 30000)
 })
 
 async function loadTimes() {
@@ -50,9 +52,10 @@ async function loadTimes() {
       base: parseTime(x.base),
       start: parseTime(x.start),
       end: parseTime(x.end),
+      category: x,
     }
   })
-  console.log("loaded times:", TIMES)
+  console.log('Loaded times:', TIMES)
 }
 
 ;(async () => {

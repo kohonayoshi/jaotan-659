@@ -1,0 +1,58 @@
+version: '3.1'
+
+services:
+  app:
+    build: ./
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    volumes:
+      - "app-config:/app/config"
+
+  mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: rootPassword
+      MYSQL_USER: jaoafa
+      MYSQL_PASSWORD: jaoafa
+      MYSQL_DATABASE: 659
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    volumes:
+      - "mariadb-data:/var/lib/mysql"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mariadb
+      - PMA_USER=root
+      - PMA_PASSWORD=rootPassword
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - 8080:80
+    volumes:
+      - /sessions
+
+volumes:
+  app-config:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./config
+      o: bind
+  mariadb-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./mariadb-data
+      o: bind

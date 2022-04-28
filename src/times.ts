@@ -1,3 +1,5 @@
+import { DBCategory } from "./entities/category.entity"
+
 export interface Time {
   hour: number
   minute: number
@@ -10,6 +12,7 @@ export interface TimeData {
   base: Time
   start: Time
   end: Time
+  category: DBCategory
 }
 
 export function parseTime(text: string) {
@@ -25,4 +28,8 @@ export function parseTime(text: string) {
     second,
     millisecond,
   }
+}
+
+export function getDateText(date: Date) {
+  return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`
 }
