@@ -46,8 +46,8 @@ client.on('messageCreate', async (message: Message) => {
     reply
       .delete()
       .then(() => null)
-      .catch(() => null) // 30秒後に削除
-  }, 30000)
+      .catch(() => null)
+  }, 300000) // 30秒後に削除
 })
 
 async function loadTimes() {
