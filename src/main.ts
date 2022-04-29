@@ -3,8 +3,8 @@ import 'reflect-metadata'
 import configuration from './configuration'
 import { DBCategory } from './entities/category.entity'
 import { DBRecord } from './entities/record.entity'
-import { getTimeData, getTimeDiffText } from './lib'
-import { AppDataSource, isTried } from './mysql'
+import { getTimeData, getTimeDiffText, getTodayDate } from './lib'
+import { addItem, AppDataSource, isTried } from './mysql'
 import { getDateText, parseTime, TimeData } from './times'
 
 const client = new Client({
@@ -27,8 +27,15 @@ client.on('messageCreate', async (message: Message) => {
   if (timeData) {
     // 有効期間内
     const dbRecordRepo = AppDataSource.getRepository(DBRecord)
-    if (!isTried(message.author, timeData.category, dbRecordRepo)) {
+    if (!await isTried(message.author, timeData.category, dbRecordRepo)) {
       message.reply(getTimeDiffText(timeData, message.createdAt))
+      await addItem(
+        message,
+        timeData.category,
+        Math.abs(
+          message.createdAt.getTime() - getTodayDate(timeData.base).getTime()
+        )
+      )
     }
     // 既にトライ済み
   }
