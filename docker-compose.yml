@@ -53,11 +53,9 @@ volumes:
       type: none
       device: ./config
       o: bind
-      rw: 644
   mariadb-data:
     driver: local
     driver_opts:
       type: none
       device: ./mariadb-data
       o: bind
-      rw: 777
