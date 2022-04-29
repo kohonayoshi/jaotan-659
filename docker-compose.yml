@@ -4,7 +4,8 @@ services:
   app:
     build: ./
     environment:
-      - NODE_ENV=development
+      NODE_ENV: development
+      TZ: Asia/Tokyo
     depends_on:
       mariadb:
         condition: service_healthy
@@ -19,6 +20,7 @@ services:
       MYSQL_USER: jaoafa
       MYSQL_PASSWORD: jaoafa
       MYSQL_DATABASE: 659
+      TZ: Asia/Tokyo
     ports:
       - 3306:3306
     healthcheck:
@@ -31,10 +33,11 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     environment:
-      - PMA_ARBITRARY=1
-      - PMA_HOST=mariadb
-      - PMA_USER=root
-      - PMA_PASSWORD=rootPassword
+      PMA_ARBITRARY: 1
+      PMA_HOST: mariadb
+      PMA_USER: root
+      PMA_PASSWORD: rootPassword
+      TZ: Asia/Tokyo
     depends_on:
       mariadb:
         condition: service_healthy
