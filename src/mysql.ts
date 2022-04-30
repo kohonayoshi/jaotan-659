@@ -1,6 +1,6 @@
 import { Message, User } from 'discord.js'
 import mysql from 'mysql2/promise'
-import { DataSource, Repository, Timestamp } from 'typeorm'
+import { DataSource, Repository } from 'typeorm'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import configuration from './configuration'
 import { DBCategory } from './entities/category.entity'
@@ -64,7 +64,7 @@ export async function addItem(
   record.category = category
   record.user = user
   record.diff = diff
-  record.postedAt = Timestamp.fromString(message.createdAt.toISOString())
+  record.postedAt = message.createdAt
 }
 
 export async function isTried(
