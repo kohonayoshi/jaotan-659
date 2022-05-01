@@ -5,6 +5,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import configuration from './configuration'
 import { DBCategory } from './entities/category.entity'
 import { DBRecord } from './entities/record.entity'
+import { DBSendTemplate } from './entities/send-template'
 import { DBUser } from './entities/user.entity'
 
 export const AppDataSource = new DataSource({
@@ -17,7 +18,7 @@ export const AppDataSource = new DataSource({
   synchronize: true,
   logging: process.env.NODE_ENV === 'development',
   namingStrategy: new SnakeNamingStrategy(),
-  entities: [DBUser, DBRecord, DBCategory],
+  entities: [DBUser, DBRecord, DBCategory, DBSendTemplate],
   subscribers: [],
   migrations: [],
   timezone: '+09:00',
@@ -51,12 +52,14 @@ export async function addItem(
   category: DBCategory,
   diff: number
 ): Promise<void> {
+  console.log(`addItem: ${message.author.tag} ${category.name} ${diff}`)
   // データ追加
   const user = new DBUser()
   user.userId = Number(message.author.id)
   user.username = message.author.username
   user.discriminator = message.author.discriminator
   user.avatarUrl = message.author.avatarURL()
+  user.save()
 
   const record = new DBRecord()
   record.messageId = Number(message.id)
@@ -65,8 +68,7 @@ export async function addItem(
   record.user = user
   record.diff = diff
   record.postedAt = message.createdAt
-
-  await AppDataSource.getRepository(DBRecord).save(record)
+  record.save()
 }
 
 export async function isTried(

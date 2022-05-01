@@ -1,9 +1,18 @@
-import { Column, CreateDateColumn, Entity, OneToMany, Timestamp } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  Timestamp,
+} from 'typeorm'
 import { DBCategory } from './category.entity'
 import { DBUser } from './user.entity'
 
 @Entity('records')
-export class DBRecord {
+export class DBRecord extends BaseEntity {
   @Column({
     type: 'bigint',
     unsigned: true,
@@ -22,7 +31,11 @@ export class DBRecord {
   @OneToMany(() => DBCategory, (category) => category.records)
   category: DBCategory
 
-  @OneToMany(() => DBUser, (user) => user.records)
+  @ManyToOne(() => DBUser, (user) => user.records)
+  @JoinColumn({
+    name: 'user_id',
+    referencedColumnName: 'userId',
+  })
   user: DBUser
 
   @Column({

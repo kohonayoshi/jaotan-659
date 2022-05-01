@@ -1,8 +1,9 @@
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
+  OneToMany,
   PrimaryColumn,
   Timestamp,
   UpdateDateColumn,
@@ -10,7 +11,7 @@ import {
 import { DBRecord } from './record.entity'
 
 @Entity('users')
-export class DBUser {
+export class DBUser extends BaseEntity {
   @PrimaryColumn({
     type: 'bigint',
     unsigned: true,
@@ -47,6 +48,6 @@ export class DBUser {
   })
   updatedAt: Timestamp
 
-  @ManyToOne(() => DBRecord, (record) => record.user)
+  @OneToMany(() => DBRecord, (record) => record.user)
   records: DBRecord[]
 }
