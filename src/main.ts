@@ -84,7 +84,7 @@ async function scheduleSendTemplates() {
   for (const schedule of schedules) {
     const cronSchedule = schedule.cron
 
-    cron.schedule(cronSchedule, () => () => sendTemplate(schedule))
+    cron.schedule(cronSchedule, () => sendTemplate(schedule))
   }
 }
 
