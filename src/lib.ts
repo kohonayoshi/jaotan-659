@@ -1,3 +1,7 @@
+import { TextChannel } from 'discord.js'
+import configuration from './configuration'
+import { DBSendTemplate } from './entities/send-template'
+import { getClient } from './main'
 import { Time, TimeData } from './times'
 
 /**
@@ -107,4 +111,23 @@ export function getTimeDiffText(timeData: TimeData, date: Date): string {
   const millisecond = paddingZero(Math.floor(diff / 10) % 100)
 
   return `${hour}:${minute}:${second}.${millisecond}`
+}
+
+export function sendTemplate(template: DBSendTemplate) {
+  const client = getClient()
+  const channelAny = client.channels.resolve(configuration.DISCORD_CHANNEL_ID)
+  if (!channelAny) {
+    console.error('channel not found')
+    return
+  }
+  if (!channelAny.isText()) {
+    console.error('channel is not text channel')
+    return
+  }
+  const channel = channelAny as TextChannel
+  const lastMessage = channel.lastMessage
+  if (lastMessage && lastMessage.content === template.text) {
+    return
+  }
+  channel.send(template.text)
 }

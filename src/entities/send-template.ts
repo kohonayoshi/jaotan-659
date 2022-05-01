@@ -3,15 +3,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   Timestamp,
   UpdateDateColumn,
 } from 'typeorm'
-import { DBCategory } from './category.entity'
-import { DBRecord } from './record.entity'
 
 @Entity('send-templates')
 export class DBSendTemplate extends BaseEntity {
@@ -27,12 +22,11 @@ export class DBSendTemplate extends BaseEntity {
   })
   text: string
 
-  @OneToOne(() => DBCategory, (category) => category.sendTemplate)
-  @JoinColumn({
-    name: 'category_id',
-    referencedColumnName: 'categoryId',
+  @Column({
+    type: 'text',
+    comment: 'スケジュール（CRON形式）',
   })
-  category: DBCategory
+  cron: string
 
   @CreateDateColumn({
     comment: 'データ登録日時',
@@ -43,7 +37,4 @@ export class DBSendTemplate extends BaseEntity {
     comment: 'データ更新日時',
   })
   updatedAt: Timestamp
-
-  @ManyToOne(() => DBRecord, (record) => record.category)
-  records: DBRecord[]
 }

@@ -3,6 +3,7 @@ import 'reflect-metadata'
 import configuration from './configuration'
 import { DBCategory } from './entities/category.entity'
 import { DBRecord } from './entities/record.entity'
+import { DBSendTemplate } from './entities/send-template'
 import {
   getPaddedDate,
   getTimeData,
@@ -11,6 +12,7 @@ import {
 } from './lib'
 import { addItem, AppDataSource, isTried } from './mysql'
 import { parseTime, TimeData } from './times'
+import cron from 'node-cron'
 
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
@@ -62,8 +64,8 @@ client.on('messageCreate', async (message: Message) => {
 })
 
 async function loadTimes() {
-  const a = await AppDataSource.getRepository(DBCategory).find()
-  TIMES = a.map((x) => {
+  const categories = await AppDataSource.getRepository(DBCategory).find()
+  TIMES = categories.map((x) => {
     return {
       text: x.text,
       type: x.matchType,
@@ -74,6 +76,15 @@ async function loadTimes() {
     }
   })
   console.log('Loaded times:', TIMES)
+}
+
+async function scheduleSendTemplates() {
+  const schedules = await AppDataSource.getRepository(DBSendTemplate).find()
+  for (const schedule of schedules) {
+    const cronSchedule = schedule.cron
+
+    cron.schedule(cronSchedule, () => () => sendTemplate(schedule))
+  }
 }
 
 ;(async () => {
