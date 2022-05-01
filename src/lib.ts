@@ -113,7 +113,7 @@ export function getTimeDiffText(timeData: TimeData, date: Date): string {
   return `${hour}:${minute}:${second}.${millisecond}`
 }
 
-export function sendTemplate(template: DBSendTemplate) {
+export async function sendTemplate(template: DBSendTemplate) {
   const client = getClient()
   const channelAny = client.channels.resolve(configuration.DISCORD_CHANNEL_ID)
   if (!channelAny) {
@@ -129,5 +129,5 @@ export function sendTemplate(template: DBSendTemplate) {
   if (lastMessage && lastMessage.content === template.text) {
     return
   }
-  channel.send(template.text)
+  await channel.send(template.text)
 }
