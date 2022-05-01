@@ -65,6 +65,8 @@ export async function addItem(
   record.user = user
   record.diff = diff
   record.postedAt = message.createdAt
+
+  await AppDataSource.getRepository(DBRecord).save(record)
 }
 
 export async function isTried(
