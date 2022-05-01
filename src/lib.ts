@@ -86,16 +86,16 @@ export function getTimeData(
 export function getTimeDiffText(timeData: TimeData, date: Date): string {
   const time = getTodayDate(timeData.base)
   const diff = Math.abs(date.getTime() - time.getTime())
-  
+
   const targetHour = date.getHours()
   const targetMinute = date.getMinutes()
   const targetSecond = date.getSeconds()
   const targetMillisecond = date.getMilliseconds()
-  
+
   const runHour = Math.floor(diff / 1000 / 60 / 60)
   const runMinute = Math.floor(diff / 1000 / 60) % 60
   const runSecond = Math.floor(diff / 1000) % 60
   const runMillisecond = Math.floor(diff / 10) % 100
-  
+
   return `${runHour}:${runMinute}:${runSecond}.${runMillisecond}差 でした（${targetHour}:${targetMinute}:${targetSecond}.${targetMillisecond}）`
 }
