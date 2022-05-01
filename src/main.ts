@@ -1,4 +1,5 @@
 import { Client, Intents, Message } from 'discord.js'
+import cron from 'node-cron'
 import 'reflect-metadata'
 import configuration from './configuration'
 import { DBCategory } from './entities/category.entity'
@@ -9,10 +10,10 @@ import {
   getTimeData,
   getTimeDiffText,
   getTodayDate,
+  sendTemplate,
 } from './lib'
 import { addItem, AppDataSource, isTried } from './mysql'
 import { parseTime, TimeData } from './times'
-import cron from 'node-cron'
 
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
@@ -93,6 +94,7 @@ async function scheduleSendTemplates() {
   console.log('Database initialized')
 
   await loadTimes()
+  await scheduleSendTemplates()
 
   await client.login(configuration.DISCORD_TOKEN)
 
