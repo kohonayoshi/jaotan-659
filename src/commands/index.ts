@@ -41,6 +41,7 @@ export async function registerCommands() {
     .setDescription('6:59! 6:59!')
 
   for (const route in routes) {
+    console.log('SubCommand:', route)
     builder.addSubcommand(routes[route].definition)
   }
   const client = getClient()
