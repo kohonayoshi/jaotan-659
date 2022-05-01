@@ -3,9 +3,14 @@ import 'reflect-metadata'
 import configuration from './configuration'
 import { DBCategory } from './entities/category.entity'
 import { DBRecord } from './entities/record.entity'
-import { getTimeData, getTimeDiffText, getTodayDate } from './lib'
+import {
+  getPaddedDate,
+  getTimeData,
+  getTimeDiffText,
+  getTodayDate,
+} from './lib'
 import { addItem, AppDataSource, isTried } from './mysql'
-import { getDateText, parseTime, TimeData } from './times'
+import { parseTime, TimeData } from './times'
 
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
@@ -28,7 +33,12 @@ client.on('messageCreate', async (message: Message) => {
     // 有効期間内
     const dbRecordRepo = AppDataSource.getRepository(DBRecord)
     if (!(await isTried(message.author, timeData.category, dbRecordRepo))) {
-      message.reply(getTimeDiffText(timeData, message.createdAt))
+      message.reply(
+        getPaddedDate(message.createdAt) +
+          ' (' +
+          getTimeDiffText(timeData, message.createdAt) +
+          ')'
+      )
       await addItem(
         message,
         timeData.category,
@@ -36,12 +46,13 @@ client.on('messageCreate', async (message: Message) => {
           message.createdAt.getTime() - getTodayDate(timeData.base).getTime()
         )
       )
+      return
     }
     // 既にトライ済み
   }
 
   // 有効期間外
-  const reply = await message.reply(getDateText(message.createdAt))
+  const reply = await message.reply(getPaddedDate(message.createdAt))
   setTimeout(() => {
     reply
       .delete()

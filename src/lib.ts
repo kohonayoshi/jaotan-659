@@ -76,6 +76,20 @@ export function getTimeData(
   return times.length > 0 ? result : null
 }
 
+function paddingZero(num: number) {
+  return ('00' + num.toString()).slice(-2)
+}
+
+export function getPaddedDate(date: Date): string {
+  return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`
+}
+
+export function getPaddedTime(time: Time): string {
+  return `${paddingZero(time.hour)}:${paddingZero(time.minute)}:${paddingZero(
+    time.second
+  )}.${paddingZero(time.millisecond)}`
+}
+
 /**
  * 時間データと指定日時を比較し、差時間テキストを返す
  *
@@ -87,15 +101,10 @@ export function getTimeDiffText(timeData: TimeData, date: Date): string {
   const time = getTodayDate(timeData.base)
   const diff = Math.abs(date.getTime() - time.getTime())
 
-  const targetHour = date.getHours()
-  const targetMinute = date.getMinutes()
-  const targetSecond = date.getSeconds()
-  const targetMillisecond = date.getMilliseconds()
+  const hour = paddingZero(Math.floor(diff / 1000 / 60 / 60))
+  const minute = paddingZero(Math.floor(diff / 1000 / 60) % 60)
+  const second = paddingZero(Math.floor(diff / 1000) % 60)
+  const millisecond = paddingZero(Math.floor(diff / 10) % 100)
 
-  const runHour = Math.floor(diff / 1000 / 60 / 60)
-  const runMinute = Math.floor(diff / 1000 / 60) % 60
-  const runSecond = Math.floor(diff / 1000) % 60
-  const runMillisecond = Math.floor(diff / 10) % 100
-
-  return `${runHour}:${runMinute}:${runSecond}.${runMillisecond}差 でした（${targetHour}:${targetMinute}:${targetSecond}.${targetMillisecond}）`
+  return `${hour}:${minute}:${second}.${millisecond}`
 }
