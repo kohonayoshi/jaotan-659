@@ -1,5 +1,4 @@
 import { DBCategory } from './entities/category.entity'
-import { getPaddedDate } from './lib'
 
 export interface Time {
   hour: number
