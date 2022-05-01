@@ -35,7 +35,7 @@ export class DBRecord {
   @Column({
     comment: '投稿日時',
     type: 'timestamp',
-    precision: 3
+    precision: 3,
   })
   postedAt: Date
 
