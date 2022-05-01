@@ -1,4 +1,5 @@
 import { DBCategory } from '@/entities/category.entity'
+import { formatDate } from '@/lib'
 import {
   SlashCommandIntegerOption,
   SlashCommandSubcommandBuilder,
@@ -47,7 +48,14 @@ export class ListCommand implements BaseCommand {
     for (const item of items) {
       embed.addField(
         item.name,
-        `\`\`\`\n${item.text}\n\`\`\`\n・基準時刻: \`${item.base}\`\n・有効期間: \`${item.start}\` ～ \`${item.end}\`\n・登録日時: \`${item.createdAt}\``
+        `\`\`\`\n${item.text}\n\`\`\`\n・基準時刻: \`${
+          item.base
+        }\`\n・有効期間: \`${item.start}\` ～ \`${
+          item.end
+        }\`\n・登録日時: \`${formatDate(
+          item.createdAt,
+          'yyyy/MM/dd HH:mm:ss'
+        )}\``
       )
     }
 

@@ -1,4 +1,5 @@
 import { DBSendTemplate } from '@/entities/send-template'
+import { formatDate } from '@/lib'
 import {
   SlashCommandIntegerOption,
   SlashCommandSubcommandBuilder,
@@ -47,7 +48,12 @@ export class ListTemplateCommand implements BaseCommand {
     for (const item of items) {
       embed.addField(
         item.name,
-        `\`\`\`\n${item.text}\n\`\`\`\nスケジュール: \`${item.cron}\`\n・登録日時: \`${item.createdAt}\``
+        `\`\`\`\n${item.text}\n\`\`\`\nスケジュール: \`${
+          item.cron
+        }\`\n・登録日時: \`${formatDate(
+          item.createdAt,
+          'yyyy/MM/dd HH:mm:ss'
+        )}\``
       )
     }
 

@@ -36,8 +36,9 @@ export class DBSendTemplate extends BaseEntity {
 
   @CreateDateColumn({
     comment: 'データ登録日時',
+    precision: 3,
   })
-  createdAt: Timestamp
+  createdAt: Date
 
   @UpdateDateColumn({
     comment: 'データ更新日時',
