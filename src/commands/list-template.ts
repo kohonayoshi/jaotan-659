@@ -53,7 +53,8 @@ export class ListTemplateCommand implements BaseCommand {
         }\`\n・登録日時: \`${formatDate(
           item.createdAt,
           'yyyy/MM/dd HH:mm:ss'
-        )}\``
+        )}\``,
+        true
       )
     }
 
