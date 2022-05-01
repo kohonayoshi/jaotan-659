@@ -97,5 +97,5 @@ export function getTimeDiffText(timeData: TimeData, date: Date): string {
   const runSecond = Math.floor(diff / 1000) % 60
   const runMillisecond = Math.floor(diff / 10) % 100
   
-  return `${runHour}:${runMinute}:${runSecond}.${runMillisecond}差でした（${targetHour}:${targetMinute}:${targetSecond}.${targetMillisecond}）`
+  return `${runHour}:${runMinute}:${runSecond}.${runMillisecond}差 でした（${targetHour}:${targetMinute}:${targetSecond}.${targetMillisecond}）`
 }
