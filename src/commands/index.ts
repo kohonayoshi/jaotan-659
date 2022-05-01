@@ -5,8 +5,11 @@ import {
   SlashCommandSubcommandBuilder,
 } from '@discordjs/builders'
 import { CacheType, CommandInteraction, PermissionResolvable } from 'discord.js'
+import { AddTemplateCommand } from './add-template'
 import { ListCommand } from './list'
+import { ListTemplateCommand } from './list-template'
 import { RegisterCommand } from './register'
+import { RemoveTemplateCommand } from './remove-template'
 import { UnregisterCommand } from './unregister'
 
 export interface Permission {
@@ -27,6 +30,9 @@ const routes: BaseCommand[] = [
   new RegisterCommand(),
   new UnregisterCommand(),
   new ListCommand(),
+  new AddTemplateCommand(),
+  new RemoveTemplateCommand(),
+  new ListTemplateCommand(),
 ]
 
 export async function registerCommands() {

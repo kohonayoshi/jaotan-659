@@ -1,5 +1,5 @@
-import { DBCategory } from '@/entities/category.entity'
-import { loadTimes } from '@/main'
+import { DBSendTemplate } from '@/entities/send-template'
+import { scheduleSendTemplates } from '@/main'
 import {
   SlashCommandStringOption,
   SlashCommandSubcommandBuilder,
@@ -7,15 +7,15 @@ import {
 import { CacheType, CommandInteraction, MessageEmbed } from 'discord.js'
 import { BaseCommand, Permission } from '.'
 
-export class UnregisterCommand implements BaseCommand {
+export class RemoveTemplateCommand implements BaseCommand {
   get definition(): SlashCommandSubcommandBuilder {
     return new SlashCommandSubcommandBuilder()
-      .setName('unregister')
-      .setDescription('対象時刻の登録を解除します。')
+      .setName('rm-template')
+      .setDescription('テンプレートスケジュールの登録を解除します。')
       .addStringOption(
         new SlashCommandStringOption()
           .setName('name')
-          .setDescription('時刻名')
+          .setDescription('テンプレート名')
           .setRequired(true)
       )
   }
@@ -36,7 +36,7 @@ export class UnregisterCommand implements BaseCommand {
 
     const name = interaction.options.getString('name')
 
-    const item = await DBCategory.findOne({
+    const item = await DBSendTemplate.findOne({
       where: { name },
     })
     if (!item) {
@@ -48,14 +48,14 @@ export class UnregisterCommand implements BaseCommand {
       console.error(e)
       await interaction.editReply('エラー: 登録解除に失敗しました。')
     })
-    await loadTimes()
+    await scheduleSendTemplates()
 
     await interaction.editReply(':white_check_mark:')
     await interaction.channel.send({
       embeds: [
         new MessageEmbed()
-          .setTitle('対象時刻登録解除完了')
-          .setDescription(`\`${name}\` を登録解除しました。`)
+          .setTitle('テンプレート登録解除完了')
+          .setDescription(`\`${name}\`を登録解除しました。`)
           .setColor('#00ff00')
           .setFooter({
             text: interaction.user.tag,

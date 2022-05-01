@@ -1,4 +1,10 @@
-import { CacheType, Client, CommandInteraction, Intents, Message } from 'discord.js'
+import {
+  CacheType,
+  Client,
+  CommandInteraction,
+  Intents,
+  Message,
+} from 'discord.js'
 import cron from 'node-cron'
 import 'reflect-metadata'
 import { registerCommands, router } from './commands'
@@ -86,11 +92,11 @@ export async function loadTimes() {
   console.log('Loaded times:', TIMES)
 }
 
-async function scheduleSendTemplates() {
+export async function scheduleSendTemplates() {
+  cron.getTasks().forEach((task) => task.stop())
   const schedules = await AppDataSource.getRepository(DBSendTemplate).find()
   for (const schedule of schedules) {
     const cronSchedule = schedule.cron
-
     cron.schedule(cronSchedule, async () => sendTemplate(schedule))
   }
 }

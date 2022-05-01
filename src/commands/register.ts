@@ -16,7 +16,7 @@ export class RegisterCommand implements BaseCommand {
       .addStringOption(
         new SlashCommandStringOption()
           .setName('name')
-          .setDescription('名前')
+          .setDescription('時刻名')
           .setRequired(true)
       )
       .addStringOption(
@@ -84,7 +84,7 @@ export class RegisterCommand implements BaseCommand {
       'INCLUDE') as DBCategory['matchType']
 
     if (!isTimeFormat(base) || !isTimeFormat(start) || !isTimeFormat(end)) {
-      await interaction.reply('エラー: 時刻の形式が不正です。')
+      await interaction.editReply('エラー: 時刻の形式が不正です。')
       return
     }
 
@@ -106,7 +106,7 @@ export class RegisterCommand implements BaseCommand {
     category.matchType = matchType
     await category.save().catch(async (e) => {
       console.error(e)
-      await interaction.reply('エラー: 登録に失敗しました。')
+      await interaction.editReply('エラー: 登録に失敗しました。')
     })
     await loadTimes()
 
@@ -114,7 +114,7 @@ export class RegisterCommand implements BaseCommand {
     await interaction.channel.send({
       embeds: [
         new MessageEmbed()
-          .setTitle('登録完了')
+          .setTitle('対象時刻登録完了')
           .setDescription(`\`${name}\` を登録しました。`)
           .setColor('#00ff00')
           .addField('名前', `\`${name}\``, true)

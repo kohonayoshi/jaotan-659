@@ -18,6 +18,12 @@ export class DBSendTemplate extends BaseEntity {
 
   @Column({
     type: 'text',
+    comment: 'テンプレート名',
+  })
+  name: string
+
+  @Column({
+    type: 'text',
     comment: 'テキスト',
   })
   text: string
