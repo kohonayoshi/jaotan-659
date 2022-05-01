@@ -53,14 +53,14 @@ export class DBCategory extends BaseEntity {
   @Column({
     type: 'varchar',
     length: 12, // 00:00:00.000
-    comment: '対象開始日時',
+    comment: '有効期間開始日時',
   })
   start: string
 
   @Column({
     type: 'varchar',
     length: 12, // 00:00:00.000
-    comment: '対象終了日時',
+    comment: '有効期間終了日時',
   })
   end: string
 

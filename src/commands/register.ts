@@ -1,5 +1,6 @@
 import { DBCategory } from '@/entities/category.entity'
 import { isTimeFormat } from '@/lib'
+import { loadTimes } from '@/main'
 import {
   SlashCommandStringOption,
   SlashCommandSubcommandBuilder,
@@ -21,7 +22,7 @@ export class RegisterCommand implements BaseCommand {
       .addStringOption(
         new SlashCommandStringOption()
           .setName('text')
-          .setDescription('テキスト')
+          .setDescription('テキスト（改行は \\n を利用）')
           .setRequired(true)
       )
       .addStringOption(
@@ -107,8 +108,9 @@ export class RegisterCommand implements BaseCommand {
       console.error(e)
       await interaction.reply('エラー: 登録に失敗しました。')
     })
+    await loadTimes()
 
-    await interaction.editReply('登録完了')
+    await interaction.editReply(':white_check_mark:')
     await interaction.channel.send({
       embeds: [
         new MessageEmbed()
@@ -116,13 +118,13 @@ export class RegisterCommand implements BaseCommand {
           .setDescription(`\`${name}\` を登録しました。`)
           .setColor('#00ff00')
           .addField('名前', `\`${name}\``, true)
-          .addField('テキスト', `\`${text}\``, true)
+          .addField('テキスト', `\`\`\`\n${text}\n\`\`\``, true)
           .addField('基準時刻', `\`${base}\``, true)
           .addField('有効期間の開始時刻', `\`${start}\``, true)
           .addField('有効期間の終了時刻', `\`${end}\``, true)
           .addField('マッチ種別', `\`${matchType}\``, true)
-          .setAuthor({
-            name: interaction.user.tag,
+          .setFooter({
+            text: interaction.user.tag,
             iconURL: interaction.user.avatarURL(),
           })
           .setTimestamp(),

@@ -71,7 +71,7 @@ client.on('interactionCreate', async (interaction) => {
   await router(interaction as CommandInteraction<CacheType>)
 })
 
-async function loadTimes() {
+export async function loadTimes() {
   const categories = await AppDataSource.getRepository(DBCategory).find()
   TIMES = categories.map((x) => {
     return {

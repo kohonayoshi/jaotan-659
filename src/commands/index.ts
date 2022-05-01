@@ -5,7 +5,9 @@ import {
   SlashCommandSubcommandBuilder,
 } from '@discordjs/builders'
 import { CacheType, CommandInteraction, PermissionResolvable } from 'discord.js'
+import { ListCommand } from './list'
 import { RegisterCommand } from './register'
+import { UnregisterCommand } from './unregister'
 
 export interface Permission {
   readonly identifier: string | null
@@ -21,7 +23,11 @@ export abstract class BaseCommand {
   abstract execute(interaction: CommandInteraction<CacheType>): Promise<void>
 }
 
-const routes: BaseCommand[] = [new RegisterCommand()]
+const routes: BaseCommand[] = [
+  new RegisterCommand(),
+  new UnregisterCommand(),
+  new ListCommand(),
+]
 
 export async function registerCommands() {
   const builder = new SlashCommandBuilder()
@@ -62,7 +68,9 @@ export async function router(interaction: CommandInteraction<CacheType>) {
           case 'USER':
             return interaction.user.id === permission.identifier
           case 'ROLE':
-            return interaction.guild.members.resolve(interaction.user).roles.cache.has(permission.identifier)
+            return interaction.guild.members
+              .resolve(interaction.user)
+              .roles.cache.has(permission.identifier)
           case 'PERMISSION':
             return interaction.guild.members
               .resolve(interaction.user)
