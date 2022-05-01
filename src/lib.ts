@@ -84,6 +84,10 @@ function paddingZero(num: number) {
   return ('00' + num.toString()).slice(-2)
 }
 
+export function isTimeFormat(str: string) {
+  return /^\d{2}:\d{2}:\d{2}\.\d{3}$/.test(str)
+}
+
 export function getPaddedDate(date: Date): string {
   return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`
 }

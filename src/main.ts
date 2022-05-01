@@ -1,6 +1,7 @@
-import { Client, Intents, Message } from 'discord.js'
+import { CacheType, Client, CommandInteraction, Intents, Message } from 'discord.js'
 import cron from 'node-cron'
 import 'reflect-metadata'
+import { registerCommands, router } from './commands'
 import configuration from './configuration'
 import { DBCategory } from './entities/category.entity'
 import { DBRecord } from './entities/record.entity'
@@ -64,6 +65,12 @@ client.on('messageCreate', async (message: Message) => {
   }, 300000) // 30秒後に削除
 })
 
+client.on('interactionCreate', async (interaction) => {
+  if (!interaction.isCommand()) return
+
+  await router(interaction as CommandInteraction<CacheType>)
+})
+
 async function loadTimes() {
   const categories = await AppDataSource.getRepository(DBCategory).find()
   TIMES = categories.map((x) => {
@@ -99,4 +106,6 @@ async function scheduleSendTemplates() {
   await client.login(configuration.DISCORD_TOKEN)
 
   console.log('Login Successful.')
+
+  await registerCommands()
 })().catch(console.error)

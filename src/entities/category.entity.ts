@@ -3,15 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   Timestamp,
   UpdateDateColumn,
 } from 'typeorm'
 import { DBRecord } from './record.entity'
-import { DBSendTemplate } from './send-template'
 
 @Entity('categories')
 export class DBCategory extends BaseEntity {
@@ -79,11 +76,4 @@ export class DBCategory extends BaseEntity {
 
   @ManyToOne(() => DBRecord, (record) => record.category)
   records: DBRecord[]
-
-  @OneToOne(() => DBSendTemplate, (sendTemplate) => sendTemplate.category)
-  @JoinColumn({
-    name: 'template_id',
-    referencedColumnName: 'templateId',
-  })
-  sendTemplate: DBSendTemplate
 }

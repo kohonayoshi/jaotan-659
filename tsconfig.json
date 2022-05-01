@@ -25,7 +25,10 @@
     "experimentalDecorators": true,
     "strictNullChecks": false,
     "baseUrl": ".",
-    "newLine": "LF"
+    "newLine": "LF",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src/**/*"],
   "types": ["src/types/*.d.ts"]

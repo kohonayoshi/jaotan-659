@@ -2,6 +2,7 @@ import config from 'config'
 
 const configuration: {
   DISCORD_TOKEN: string
+  DISCORD_GUILD_ID: string
   DISCORD_CHANNEL_ID: string
   DB_TYPE: 'mysql' | 'sqlite'
   DB_HOSTNAME: string
@@ -11,6 +12,7 @@ const configuration: {
   DB_DATABASE: string
 } = {
   DISCORD_TOKEN: config.get('discord.token'),
+  DISCORD_GUILD_ID: config.get('discord.guildId'),
   DISCORD_CHANNEL_ID: config.get('discord.channelId'),
   DB_TYPE: config.get('db.type'),
   DB_HOSTNAME: config.get('db.host'),
