@@ -89,7 +89,7 @@ export class RegisterCommand implements BaseCommand {
     }
 
     const count = await DBCategory.count({
-      where: [{ name }, { base }],
+      where: [{ name }],
     })
     if (count > 0) {
       await interaction.editReply('既に登録済みです。')
