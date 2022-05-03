@@ -51,15 +51,25 @@ export async function addItem(
   message: Message,
   category: DBCategory,
   diff: number
-): Promise<void> {
+): Promise<DBRecord> {
   console.log(`addItem: ${message.author.tag} ${category.name} ${diff}`)
   // データ追加
-  const user = new DBUser()
-  user.userId = Number(message.author.id)
-  user.username = message.author.username
-  user.discriminator = message.author.discriminator
-  user.avatarUrl = message.author.avatarURL()
-  user.save()
+  let user
+  const dbUser = await DBUser.findOne({
+    where: {
+      userId: Number(message.author.id),
+    },
+  })
+  if (dbUser) {
+    user = dbUser
+  } else {
+    const newUser = new DBUser()
+    newUser.userId = Number(message.author.id)
+    newUser.username = message.author.username
+    newUser.discriminator = message.author.discriminator
+    newUser.avatarUrl = message.author.avatarURL()
+    user = await newUser.save()
+  }
 
   const record = new DBRecord()
   record.messageId = Number(message.id)
@@ -68,7 +78,7 @@ export async function addItem(
   record.user = user
   record.diff = diff
   record.postedAt = message.createdAt
-  record.save()
+  return await record.save()
 }
 
 export async function isTried(
@@ -88,4 +98,13 @@ export async function isTried(
     },
   })
   return !!dbRecord
+}
+
+export async function calcRank(record: DBRecord) {
+  const records = await DBRecord.find({
+    order: {
+      diff: 'ASC',
+    },
+  })
+  return records.filter((r) => r.diff < record.diff).length + 1
 }

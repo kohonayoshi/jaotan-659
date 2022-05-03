@@ -5,7 +5,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   Timestamp,
 } from 'typeorm'
 import { DBCategory } from './category.entity'
@@ -28,7 +27,7 @@ export class DBRecord extends BaseEntity {
   })
   rawtext: string
 
-  @OneToMany(() => DBCategory, (category) => category.records)
+  @ManyToOne(() => DBCategory, (category) => category.records)
   category: DBCategory
 
   @ManyToOne(() => DBUser, (user) => user.records)

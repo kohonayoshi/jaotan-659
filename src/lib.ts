@@ -89,7 +89,9 @@ export function isTimeFormat(str: string) {
 }
 
 export function getPaddedDate(date: Date): string {
-  return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`
+  return `${paddingZero(date.getHours())}:${paddingZero(
+    date.getMinutes()
+  )}:${paddingZero(date.getSeconds())}.${date.getMilliseconds()}`
 }
 
 export function getPaddedTime(time: Time): string {
@@ -125,7 +127,15 @@ export function getTimeDiffText(timeData: TimeData, date: Date): string {
   const second = paddingZero(Math.floor(diff / 1000) % 60)
   const millisecond = paddingZero(Math.floor(diff / 10) % 100)
 
-  return `${hour}:${minute}:${second}.${millisecond}`
+  if (hour !== '00') {
+    return `${hour}時間${minute}分${second}.${millisecond}秒`
+  } else if (minute !== '00') {
+    return `${minute}分${second}.${millisecond}秒`
+  } else if (second !== '00') {
+    return `${second}.${millisecond}秒`
+  } else {
+    return `0.${millisecond}秒`
+  }
 }
 
 export async function sendTemplate(template: DBSendTemplate) {

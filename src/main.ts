@@ -14,12 +14,13 @@ import { DBRecord } from './entities/record.entity'
 import { DBSendTemplate } from './entities/send-template'
 import {
   getPaddedDate,
+  getPaddedTime,
   getTimeData,
   getTimeDiffText,
   getTodayDate,
   sendTemplate,
 } from './lib'
-import { addItem, AppDataSource, isTried } from './mysql'
+import { addItem, AppDataSource, calcRank, isTried } from './mysql'
 import { parseTime, TimeData } from './times'
 
 const client = new Client({
@@ -43,18 +44,20 @@ client.on('messageCreate', async (message: Message) => {
     // 有効期間内
     const dbRecordRepo = AppDataSource.getRepository(DBRecord)
     if (!(await isTried(message.author, timeData.category, dbRecordRepo))) {
-      message.reply(
-        getPaddedDate(message.createdAt) +
-          ' (' +
-          getTimeDiffText(timeData, message.createdAt) +
-          ')'
-      )
-      await addItem(
+      const record = await addItem(
         message,
         timeData.category,
         Math.abs(
           message.createdAt.getTime() - getTodayDate(timeData.base).getTime()
         )
+      )
+      message.reply(
+        `${getPaddedDate(message.createdAt)} (\`${getPaddedTime(
+          timeData.base
+        )}\` との差: \`${getTimeDiffText(
+          timeData,
+          message.createdAt
+        )}\` | ${await calcRank(record)}位)`
       )
       return
     }
@@ -114,4 +117,4 @@ export async function scheduleSendTemplates() {
   console.log('Login Successful.')
 
   await registerCommands()
-})().catch(console.error)
+})()

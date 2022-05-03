@@ -3,7 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Timestamp,
   UpdateDateColumn,
@@ -75,6 +75,6 @@ export class DBCategory extends BaseEntity {
   })
   updatedAt: Timestamp
 
-  @ManyToOne(() => DBRecord, (record) => record.category)
+  @OneToMany(() => DBRecord, (record) => record.category)
   records: DBRecord[]
 }
