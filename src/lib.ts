@@ -80,8 +80,8 @@ export function getTimeData(
   return times.length > 0 ? result : null
 }
 
-function paddingZero(num: number) {
-  return ('00' + num.toString()).slice(-2)
+function paddingZero(num: number, length = 2): string {
+  return ('0'.repeat(length) + num.toString()).slice(-length)
 }
 
 export function isTimeFormat(str: string) {
@@ -91,13 +91,16 @@ export function isTimeFormat(str: string) {
 export function getPaddedDate(date: Date): string {
   return `${paddingZero(date.getHours())}:${paddingZero(
     date.getMinutes()
-  )}:${paddingZero(date.getSeconds())}.${date.getMilliseconds()}`
+  )}:${paddingZero(date.getSeconds())}.${paddingZero(
+    date.getMilliseconds(),
+    3
+  )}`
 }
 
 export function getPaddedTime(time: Time): string {
   return `${paddingZero(time.hour)}:${paddingZero(time.minute)}:${paddingZero(
     time.second
-  )}.${paddingZero(time.millisecond)}`
+  )}.${paddingZero(time.millisecond, 3)}`
 }
 
 export function formatDate(date: Date, format: string): string {
@@ -125,7 +128,7 @@ export function getTimeDiffText(timeData: TimeData, date: Date): string {
   const hour = paddingZero(Math.floor(diff / 1000 / 60 / 60))
   const minute = paddingZero(Math.floor(diff / 1000 / 60) % 60)
   const second = paddingZero(Math.floor(diff / 1000) % 60)
-  const millisecond = paddingZero(Math.floor(diff / 10) % 100)
+  const millisecond = paddingZero(Math.floor(diff / 10) % 100, 3)
 
   if (hour !== '00') {
     return `${hour}時間${minute}分${second}.${millisecond}秒`
