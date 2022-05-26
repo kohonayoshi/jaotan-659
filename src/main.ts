@@ -20,7 +20,7 @@ import {
   getTodayDate,
   sendTemplate,
 } from './lib'
-import { addItem, AppDataSource, calcRank, isTried } from './mysql'
+import { addItem, AppDataSource, calcRank, isTodayTried } from './mysql'
 import { parseTime, TimeData } from './times'
 
 const client = new Client({
@@ -43,7 +43,7 @@ client.on('messageCreate', async (message: Message) => {
   if (timeData) {
     // 有効期間内
     const dbRecordRepo = AppDataSource.getRepository(DBRecord)
-    if (!(await isTried(message.author, timeData.category, dbRecordRepo))) {
+    if (!(await isTodayTried(message.author, timeData.category, dbRecordRepo))) {
       const record = await addItem(
         message,
         timeData.category,
