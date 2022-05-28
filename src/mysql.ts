@@ -1,6 +1,11 @@
 import { Message, User } from 'discord.js'
 import mysql from 'mysql2/promise'
-import { DataSource, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm'
+import {
+  DataSource,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  Repository,
+} from 'typeorm'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import configuration from './configuration'
 import { DBCategory } from './entities/category.entity'
@@ -95,10 +100,9 @@ export async function isTodayTried(
       category: {
         categoryId: Number(category.categoryId),
       },
-      postedAt: (
+      postedAt:
         MoreThanOrEqual(new Date(new Date().setHours(0, 0, 0, 0))) ||
-        LessThanOrEqual(new Date(new Date().setHours(23, 59, 59, 999)))
-      ),
+        LessThanOrEqual(new Date(new Date().setHours(23, 59, 59, 999))),
     },
   })
   return !!dbRecord

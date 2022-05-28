@@ -43,7 +43,9 @@ client.on('messageCreate', async (message: Message) => {
   if (timeData) {
     // 有効期間内
     const dbRecordRepo = AppDataSource.getRepository(DBRecord)
-    if (!(await isTodayTried(message.author, timeData.category, dbRecordRepo))) {
+    if (
+      !(await isTodayTried(message.author, timeData.category, dbRecordRepo))
+    ) {
       const record = await addItem(
         message,
         timeData.category,
