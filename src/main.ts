@@ -106,7 +106,7 @@ export async function scheduleSendTemplates() {
   }
 }
 
-;(async () => {
+async function main() {
   console.log('Initializing database...')
   await AppDataSource.initialize()
   console.log('Database initialized')
@@ -119,4 +119,10 @@ export async function scheduleSendTemplates() {
   console.log('Login Successful.')
 
   await registerCommands()
+}
+
+;(async () => {
+  await main().finally(async () => {
+    await AppDataSource.destroy()
+  })
 })()
